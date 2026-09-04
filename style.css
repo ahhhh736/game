@@ -1,0 +1,134 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden;
+  background: #1c1c1c; font-family: "Microsoft YaHei", sans-serif;
+  user-select: none; -webkit-user-select: none; touch-action: none; }
+
+/* 启动页 */
+#start { position: fixed; inset: 0; z-index: 200;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #2a3d18, #3b5323 60%, #4a6b2a); color: #fff; }
+#start h1 { font-size: clamp(28px, 7vw, 56px); letter-spacing: 4px; margin-bottom: 30px; }
+#enterBtn { padding: 14px 44px; font-size: 20px; border: none; border-radius: 30px;
+  background: #c0392b; color: #fff; cursor: pointer; font-weight: 700; }
+#enterBtn:active { transform: scale(.96); }
+
+/* 画布 */
+#cv { display: block; width: 100vw; height: 100vh; background: #87b8d6; }
+
+/* HUD */
+#hud { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
+#exitBtn, #muteBtn { position: absolute; top: 14px; pointer-events: auto;
+  border: none; border-radius: 8px; padding: 8px 14px; font-size: 14px; cursor: pointer; }
+#exitBtn { right: 14px; background: rgba(0,0,0,.5); color: #fff; }
+#muteBtn { right: 90px; background: rgba(0,0,0,.5); color: #fff; }
+
+/* 拼图 HUD（左上角） */
+#puzzle { position: absolute; top: 14px; left: 14px; display: grid;
+  grid-template-columns: repeat(3, 38px); gap: 4px; pointer-events: auto; }
+#puzzle .pc { width: 38px; height: 38px; background: rgba(255,255,255,.35);
+  border: 1px solid #fff; border-radius: 4px; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; color: #333; text-align: center; }
+#puzzle .pc.on { background: #c0392b; color: #fff; }
+#puzzle.done { cursor: pointer; box-shadow: 0 0 0 3px #c0392b; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(192,57,43,.4); } }
+
+/* 三块纪念拼图 HUD（机关一 6 格计数下方） */
+#pieceHUD { position: absolute; top: 104px; left: 14px; display: flex;
+  align-items: center; gap: 8px; pointer-events: none; }
+#pieceCells { display: flex; gap: 4px; }
+#pieceCells .piece-cell { width: 34px; height: 34px; border-radius: 7px; border: 2px solid #fff;
+  display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800;
+  background: rgba(255,255,255,.25); text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  transition: background .3s; }
+#pieceProg { font-size: 13px; color: #fff; font-weight: 700; text-shadow: 0 1px 2px #000; }
+
+/* 右上角提醒图标 */
+#remind { position: absolute; top: 56px; left: 50%; transform: translateX(-50%);
+  min-width: 64px; height: 40px; padding: 0 16px; border-radius: 22px;
+  background: #e67e22; color: #fff; display: none;
+  align-items: center; justify-content: center; font-weight: 700; font-size: 15px;
+  pointer-events: auto; cursor: pointer; box-shadow: 0 0 12px #e67e22; }
+#remind.show { display: flex; }
+#remindText { position: absolute; top: 106px; left: 50%; transform: translateX(-50%);
+  max-width: min(340px, 80vw); text-align: center;
+  background: #fff; color: #222; padding: 12px 16px; border-radius: 10px; font-size: 14px;
+  display: none; pointer-events: auto; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+
+/* 横幅 */
+#banner { position: fixed; top: 22%; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,.7); color: #ffd966; font-size: clamp(22px,5vw,40px);
+  font-weight: 800; padding: 14px 36px; border-radius: 12px; z-index: 80; display: none;
+  pointer-events: none; }
+
+/* 照片弹窗 */
+.modal { position: fixed; inset: 0; z-index: 150; display: none;
+  align-items: center; justify-content: center; background: rgba(0,0,0,.6); }
+.modal.show { display: flex; }
+.modal-box { background: #fff; border-radius: 16px; padding: 22px; max-width: 90vw;
+  max-height: 86vh; overflow: auto; text-align: center; }
+.photo-box { width: min(70vw, 420px); height: 240px; border-radius: 10px; margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  background: #3b5323; font-size: 18px; padding: 14px; text-align: center; }
+.modal-box p { color: #333; font-size: 15px; line-height: 1.7; }
+.modal-box .hint { color: #999; font-size: 12px; margin-top: 10px; }
+
+/* 彩蛋：三块拼图依次飞入中间拼成照片 + 弹幕 */
+#egg .egg-box { position: relative; width: min(86vw, 560px); }
+#egg h2 { color: #ffd966; text-align: center; margin-bottom: 12px; }
+#eggStage { position: relative; height: min(46vh, 320px); }
+.egg-tile { position: absolute; top: 0; border-radius: 12px; border: 3px solid #fff;
+  box-shadow: 0 6px 22px rgba(0,0,0,.55); color: #fff; opacity: 0;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: 8px; overflow: hidden; }
+.egg-tile.fly { animation: eggFly .7s cubic-bezier(.15,.75,.25,1) both; }
+.egg-tile .ph { font-size: 13px; text-shadow: 0 1px 3px #000; }
+.egg-tile .cap { position: absolute; left: 0; right: 0; bottom: 6px; color: #ffd966;
+  font-size: 13px; font-weight: 700; text-shadow: 0 1px 3px #000; }
+@keyframes eggFly {
+  0% { transform: translate(var(--fx), var(--fy)) scale(.15) rotate(-14deg); opacity: 0; }
+  55% { opacity: 1; }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+#eggDanmu { position: absolute; left: 0; right: 0; top: 70px; bottom: 0;
+  pointer-events: none; overflow: hidden; }
+.danmu-item { position: absolute; left: 100%; white-space: nowrap; color: #fff;
+  font-size: 18px; text-shadow: 0 1px 3px #000; animation: edanmu linear forwards; }
+@keyframes edanmu { from { left: 100%; } to { left: -120%; } }
+
+/* 触屏控制 */
+#touch { position: fixed; inset: 0; z-index: 60; pointer-events: none; }
+#joy { position: absolute; left: 26px; bottom: 26px; width: 120px; height: 120px;
+  border-radius: 50%; background: rgba(0,0,0,.25); pointer-events: auto; }
+#joyKnob { position: absolute; left: 40px; top: 40px; width: 40px; height: 40px;
+  border-radius: 50%; background: rgba(255,255,255,.8); }
+#btns { position: absolute; right: 26px; bottom: 26px; display: flex; gap: 16px; pointer-events: auto; }
+#btns button { width: 72px; height: 72px; border-radius: 50%; border: none;
+  font-size: 16px; font-weight: 700; color: #fff; }
+#jumpBtn { background: #c0392b; }
+#pickBtn { background: #2a3d18; }
+
+/* 拔河参加按钮 */
+#joinBtn { position: fixed; left: 50%; top: 58%; transform: translateX(-50%);
+  z-index: 90; display: none; padding: 18px 60px; font-size: 28px; font-weight: 800;
+  color: #fff; background: #c0392b; border: 4px solid #fff; border-radius: 16px;
+  cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,.4); animation: joinPulse 1s infinite; }
+@keyframes joinPulse { 50% { transform: translateX(-50%) scale(1.06); } }
+
+/* 射击按钮（开镜时显示，不挡镜中靶） */
+#fireBtn { position: fixed; right: 34px; bottom: 40px; z-index: 95; display: none;
+  width: 96px; height: 96px; border-radius: 50%; border: 4px solid #fff;
+  background: #c0392b; color: #fff; font-size: 22px; font-weight: 800; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,.5); }
+#fireBtn:active { transform: scale(.94); }
+/* 射击结果提示（可点击） */
+#shootMsg { position: fixed; left: 50%; top: 18%; transform: translateX(-50%);
+  z-index: 96; display: none; text-align: center; cursor: pointer;
+  background: rgba(0,0,0,.75); color: #ffd54a; padding: 18px 44px; border-radius: 16px;
+  border: 3px solid #ffd54a; }
+#shootMsgText { font-size: 34px; font-weight: 800; letter-spacing: 4px; }
+.shootMsgHint { font-size: 13px; color: #fff; opacity: .7; margin-top: 8px; }
+
+/* 竖屏提示 */
+#rotate { position: fixed; inset: 0; z-index: 300; display: none;
+  align-items: center; justify-content: center; background: #111; color: #fff; font-size: 20px; text-align: center; }
+@media (orientation: portrait) and (max-width: 900px) { #rotate { display: flex; } }

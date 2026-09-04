@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>超级一团六连</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 启动页 -->
+<div id="start">
+  <h1 id="startTitle">超级一团六连</h1>
+  <button id="enterBtn">进入游戏</button>
+</div>
+
+<!-- 游戏画布 -->
+<canvas id="cv"></canvas>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="puzzle"></div>
+  <div id="pieceHUD">
+    <div id="pieceCells"></div>
+    <div id="pieceProg">0/3</div>
+  </div>
+  <div id="remind">提示</div>
+  <div id="remindText"></div>
+  <button id="muteBtn">🔊</button>
+  <button id="exitBtn">退出</button>
+</div>
+
+<!-- 横幅 -->
+<div id="banner"></div>
+
+<!-- 拔河：参加大按钮 -->
+<button id="joinBtn">参加</button>
+
+<!-- 射击：开镜射击按钮 + 结果提示 -->
+<button id="fireBtn">射击</button>
+<div id="shootMsg"><div id="shootMsgText"></div><div class="shootMsgHint">点击继续</div></div>
+
+<!-- 照片弹窗 -->
+<div class="modal" id="photoModal">
+  <div class="modal-box">
+    <div class="photo-box" id="photoBox"></div>
+    <p id="photoText"></p>
+    <p class="hint">点击任意处继续</p>
+  </div>
+</div>
+
+<!-- 彩蛋 -->
+<div class="modal" id="egg">
+  <div class="egg-box">
+    <h2 id="eggTitle">别着急，还有彩蛋！</h2>
+    <div id="eggStage"></div>
+    <div id="eggDanmu"></div>
+  </div>
+</div>
+
+<!-- 触屏控制 -->
+<div id="touch">
+  <div id="joy"><div id="joyKnob"></div></div>
+  <div id="btns">
+    <button id="jumpBtn">跳</button>
+    <button id="pickBtn">拾取</button>
+  </div>
+</div>
+
+<div id="rotate">请横屏游玩 📱↔</div>
+
+<script src="content.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
