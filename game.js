@@ -35,11 +35,15 @@ const Sound = (() => {
 // ===================== 基础设置 =====================
 const cv = document.getElementById('cv');
 const ctx = cv.getContext('2d');
-// 背景图（你已抠掉小人）：assets/bg.jpg
+// 背景图（你已抠掉小人）：兼容 根目录 bg.jpg 与 assets/bg.jpg 两种结构
 const bgImg = new Image();
 let bgReady = false;
+let bgTried = false;
 bgImg.onload = () => { bgReady = true; };
-bgImg.src = 'assets/bg.jpg';
+bgImg.onerror = () => {            // 当前路径加载失败 → 尝试另一种
+  if (!bgTried) { bgTried = true; bgImg.src = 'assets/bg.jpg'; }
+};
+bgImg.src = 'bg.jpg';
 const TILE = 40;                 // 一格高度（逻辑像素）
 const GROUND_Y = 520;            // 主地面 y（下移，露出背景图草地）
 const GROUND2_Y = GROUND_Y + 200;// 空缺下方路径 y
